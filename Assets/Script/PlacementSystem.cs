@@ -5,7 +5,7 @@ using Fenrir.Actors;
 using Fenrir.Managers;
 using UnityEngine;
 
-public class PlacementSystem : MonoBehaviour
+public class PlacementSystem : GameActor<GameManager>
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Grid _grid;
@@ -25,13 +25,14 @@ public class PlacementSystem : MonoBehaviour
     private Vector3Int lastDetectedPos = Vector3Int.zero;
 
     private IBuildingState _buildingState;
-    private void Start()
+
+    public override void ActorStart()
     {
         StopPlacement();
         floarData = new ();
         buildingsData = new();
     }
-
+    
     private void StopPlacement()
     {
         if (_buildingState == null)
@@ -66,9 +67,8 @@ public class PlacementSystem : MonoBehaviour
 
         _buildingState.OnAction(gridPos);
     }
-    
 
-    private void Update()
+    public override void ActorUpdate()
     {
         if(_buildingState==null)
             return;
@@ -80,6 +80,6 @@ public class PlacementSystem : MonoBehaviour
             _buildingState.UpdateState(gridPos);
             lastDetectedPos = gridPos;
         }
-
     }
+
 }

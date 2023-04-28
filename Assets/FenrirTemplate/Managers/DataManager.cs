@@ -8,7 +8,10 @@ namespace Fenrir.Managers
 {
     public class DataManager : EventBehaviour<DataManager>
     {
+        public ObjectDataBaseSO _dataBaseSo;
+        public int SelectedObjectIndex;
         public FXData fXData;
         public LevelDataCapsule levelCapsule;
+        public Camera SceneCamera;
     }
 }

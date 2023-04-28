@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fenrir.Managers;
 using UnityEngine;
 
 public class PlacementState : IBuildingState
@@ -34,10 +35,12 @@ public class PlacementState : IBuildingState
             previewSystem.StartShowingPlacementPreview(
                 database.objectsData[selectedObjectIndex].Prefab,
                 database.objectsData[selectedObjectIndex].Size);
+        DataManager.Instance.SelectedObjectIndex = selectedObjectIndex;
         }
         else
             throw new System.Exception($"No object with ID {iD}");
-        
+
+
     }
 
     public void EndState()

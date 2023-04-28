@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Fenrir.Actors;
+using Fenrir.Managers;
 using UnityEngine;
 
-public class PreviewSystem : MonoBehaviour
+public class PreviewSystem : GameActor<GameManager>
 {
     [SerializeField] private float previewYOffset = 0.06f;
 
@@ -17,7 +19,7 @@ public class PreviewSystem : MonoBehaviour
 
     private Renderer cellIndicatorRenderer;
 
-    private void Start()
+    public override void ActorStart()
     {
         previewMaterialInstance = new Material(previewMaterialsPrefab);
         cellIndicator.gameObject.SetActive(false);

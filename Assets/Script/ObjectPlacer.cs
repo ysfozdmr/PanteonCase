@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fenrir.Actors;
+using Fenrir.Managers;
 using UnityEngine;
 
-public class ObjectPlacer : MonoBehaviour
+public class ObjectPlacer : GameActor<GameManager>
 {
     [SerializeField]
     private List<GameObject> placedGameObjects = new();
