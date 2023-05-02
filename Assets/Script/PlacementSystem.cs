@@ -14,36 +14,39 @@ public class PlacementSystem : GameActor<GameManager>
 
     [SerializeField] private GameObject gridVisualizastion;
 
-    private GridData floarData, buildingsData;
+    public GridData floarData, buildingsData;
 
     private Renderer prieviewRenderer;
-    
+
     [SerializeField] private PreviewSystem preview;
 
     [SerializeField] private ObjectPlacer _objectPlacer;
-    
+
     private Vector3Int lastDetectedPos = Vector3Int.zero;
 
     private IBuildingState _buildingState;
 
+    public GameObject field;
+
     public override void ActorStart()
     {
         StopPlacement();
-        floarData = new ();
+        floarData = new();
         buildingsData = new();
     }
-    
+
     private void StopPlacement()
     {
         if (_buildingState == null)
         {
             return;
         }
+
         gridVisualizastion.SetActive(false);
         _buildingState.EndState();
         inputManager.OnClicked -= PlaceStructure;
         inputManager.OnExit -= StopPlacement;
-        lastDetectedPos= Vector3Int.zero;
+        lastDetectedPos = Vector3Int.zero;
         _buildingState = null;
     }
 
@@ -62,15 +65,27 @@ public class PlacementSystem : GameActor<GameManager>
         {
             return;
         }
+
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
         Vector3Int gridPos = _grid.WorldToCell(mousePos);
 
         _buildingState.OnAction(gridPos);
     }
 
+    public void PlaceSoldier(int selectedSoldierIndex)
+    {
+        Vector3 soldierPos;
+        Vector3Int gridPos;
+
+        soldierPos = _objectPlacer.placedGameObjects[0].transform.position + Vector3.right * 2;
+        gridPos = _grid.WorldToCell(soldierPos);
+        _buildingState.OnActionSoldier(gridPos, selectedSoldierIndex, field);
+        
+    }
+
     public override void ActorUpdate()
     {
-        if(_buildingState==null)
+        if (_buildingState == null)
             return;
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
         Vector3Int gridPos = _grid.WorldToCell(mousePos);
@@ -81,5 +96,4 @@ public class PlacementSystem : GameActor<GameManager>
             lastDetectedPos = gridPos;
         }
     }
-
 }

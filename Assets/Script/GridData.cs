@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public class GridData
@@ -18,7 +19,7 @@ public class GridData
         foreach (var pos in positionToOccupy)
         {
             if (placedObjects.ContainsKey(pos))
-                throw new Exception($"Dictionart alreadt contains this cell positions{pos}");
+                throw new Exception($"Dictionary already contains this cell positions{pos}");
             placedObjects[pos] = data;
         }
     }
@@ -30,7 +31,7 @@ public class GridData
         {
             for (int y = 0; y < objectSize.y; y++)
             {
-                returnVal.Add(gridPosition+ new Vector3Int(x,0,y));
+                returnVal.Add(gridPosition+ new Vector3Int(x,y,0));
             }
         }
 
@@ -40,6 +41,27 @@ public class GridData
     public bool CanPlaceObject(Vector3Int gridPosition, Vector2Int objectSize)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
+        //Debug.Log(objectSize + " object size " + positionToOccupy[0] +" !!!");
+        foreach (var pos in positionToOccupy)
+        {
+            if (placedObjects.ContainsKey(pos))
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool CanPlaceObject(Vector3Int gridPosition, Vector2Int objectSize, Vector3 spawnerPosition)
+    {
+        List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
+        
+        if (positionToOccupy[0].x > 3  || positionToOccupy[0].x <-4 
+            || positionToOccupy[0].y>3 || positionToOccupy[0].y <-7)
+        {
+            return false;
+        }
+        
+        Debug.Log(objectSize + " object size ");
         foreach (var pos in positionToOccupy)
         {
             if (placedObjects.ContainsKey(pos))
@@ -49,6 +71,8 @@ public class GridData
         return true;
     }
 }
+
+
 
 public class PlacementData
 {

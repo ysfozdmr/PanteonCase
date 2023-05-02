@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class ObjectPlacer : GameActor<GameManager>
 {
-    [SerializeField]
-    private List<GameObject> placedGameObjects = new();
+    public List<GameObject> placedGameObjects = new();
 
     public int PlaceObject(GameObject prefab, Vector3 position)
     {

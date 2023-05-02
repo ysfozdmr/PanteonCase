@@ -15,9 +15,26 @@ MonoBehaviour:
   objectsData:
   - <Name>k__BackingField: Barracks
     <ID>k__BackingField: 0
+    <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 8177379989055486964, guid: ebeabedcd38ac194cbc53d7be1bbbd65, type: 3}
   - <Name>k__BackingField: PowerPlant
     <ID>k__BackingField: 1
+    <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 4073297717705811936, guid: f27022fe112710a4d916a4af3b3c71c3, type: 3}
+  - <Name>k__BackingField: FirstSoldier
+    <ID>k__BackingField: 10
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
+  - <Name>k__BackingField: FirstSoldier
+    <ID>k__BackingField: 11
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
+  - <Name>k__BackingField: FirstSoldier
+    <ID>k__BackingField: 12
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
