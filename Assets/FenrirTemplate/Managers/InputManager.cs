@@ -14,7 +14,9 @@ namespace Fenrir.Managers
     {
         private Camera sceneCamera;
         private Vector3 lastPos;
+        private Vector3 barrackPos;
         [SerializeField] private LayerMask placementLayerMask;
+        [SerializeField] private LayerMask barrackLayerMask;
 
 
         public event Action OnClicked, OnExit;
@@ -39,6 +41,21 @@ namespace Fenrir.Managers
 
         public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
 
+        public Vector3 GetBarrackPosition()
+        {
+           
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = sceneCamera.nearClipPlane;
+            Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, barrackLayerMask);
+            if (hit.collider != null)
+            {
+                Debug.Log(barrackPos);
+                barrackPos = hit.collider.gameObject.transform.position;
+            }
+
+            return barrackPos;
+        }
         public Vector3 GetSelectedMapPosition()
         {
             Vector3 mousePos = Input.mousePosition;

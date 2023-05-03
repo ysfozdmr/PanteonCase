@@ -17,6 +17,8 @@ public class PlacementState : IBuildingState
 
     private int checkCounter;
 
+    public List<Vector3Int> placedSoldier = new List<Vector3Int>();
+
     public PlacementState(int iD,
         Grid grid,
         PreviewSystem previewSystem,
@@ -58,16 +60,18 @@ public class PlacementState : IBuildingState
         return selectedData.CanPlaceObject(gridPos, database.objectsData[selectedObjectIndexs].Size);
     }
 
-    private bool SoldierCheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs)
+    private bool SoldierCheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs, int soldierCount)
     {
         GridData selectedData = database.objectsData[selectedObjectIndexs].isInteractable == true
             ? floorData
             : buildingsData;
-        return selectedData.CanPlaceObject(gridPos, database.objectsData[selectedObjectIndexs].Size, Vector3.zero);
+        return selectedData.CanPlaceObject(gridPos, database.objectsData[selectedObjectIndexs].Size, soldierCount);
     }
 
     public void OnAction(Vector3Int gridPosition)
     {
+        previewSystem.enabled = true;
+
         bool placementValiditiy = CheckPlacementValiditiy(gridPosition, selectedObjectIndex);
         if (placementValiditiy == false)
         {
@@ -87,37 +91,66 @@ public class PlacementState : IBuildingState
         previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
     }
 
-    public void OnActionSoldier(Vector3Int gridPosition, int selectedSoldierIndex, GameObject field)
+    public void OnActionSoldier(Vector3Int gridPosition, int selectedSoldierIndex)
     {
-        bool placementValiditiy = SoldierCheckPlacementValiditiy(gridPosition, selectedSoldierIndex);
-        if (placementValiditiy == false && checkCounter<3)
+        previewSystem.enabled = false;
+        Vector3 pos =InputManager.Instance.GetBarrackPosition();
+        bool placementValiditiy =
+            SoldierCheckPlacementValiditiy(gridPosition, selectedSoldierIndex, placedSoldier.Count);
+        if (placementValiditiy == false)
         {
-            if (checkCounter == 0)
-            {
-                Vector3 pos = objectPlacer.placedGameObjects[0].transform.position + Vector3.left;
-                gridPosition = grid.WorldToCell(pos);
-               
-            }
-            else if (checkCounter == 1)
-            {
-                Vector3 pos = objectPlacer.placedGameObjects[0].transform.position + Vector3.up * 2;
-                gridPosition = grid.WorldToCell(pos);
-                
-            }
-            else if (checkCounter == 2)
-            {
-                Vector3 pos = objectPlacer.placedGameObjects[0].transform.position + Vector3.down;
-                gridPosition = grid.WorldToCell(pos);
-             
-            }
-          
-            checkCounter++;
-            OnActionSoldier(gridPosition, selectedSoldierIndex, field);
-            return;
-            Debug.Log(checkCounter);
+            CheckCellPosition(pos, gridPosition, selectedSoldierIndex);
         }
+        else
+        {
+            PlaceSoldier(gridPosition, selectedSoldierIndex);
+        }
+    }
 
+
+    private void CheckCellPosition(Vector3 pos, Vector3Int gridPosition, int selectedSoldierIndex)
+    {
+        if (checkCounter < 6)
+        {
+            switch (checkCounter)
+            {
+                case 0:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.left, gridPosition);
+                    break;
+                case 1:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.up * 2, gridPosition);
+                    break;
+                case 2:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.down, gridPosition);
+                    break;
+                case 3:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.right + Vector3.up, gridPosition);
+                    break;
+                case 4:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.down + Vector3.right, gridPosition);
+                    break;
+                case 5:
+                    gridPosition = ArrangeCellPosition(pos, Vector3.up + Vector3.left, gridPosition);
+                    break;
+            }
+
+            checkCounter++;
+            OnActionSoldier(gridPosition, selectedSoldierIndex);
+            return;
+        }
+    }
+
+    private Vector3Int ArrangeCellPosition(Vector3 position, Vector3 direction, Vector3Int gridPosition)
+    {
+        position += direction;
+        gridPosition = grid.WorldToCell(position);
+        return gridPosition;
+    }
+
+    private void PlaceSoldier(Vector3Int gridPosition, int selectedSoldierIndex)
+    {
         checkCounter = 0;
+        Debug.Log("zort");
         int index = objectPlacer.PlaceObject(database.objectsData[selectedSoldierIndex].Prefab,
             grid.CellToWorld(gridPosition));
 
@@ -127,6 +160,7 @@ public class PlacementState : IBuildingState
         selectedData.AddObjectAt(gridPosition, database.objectsData[selectedSoldierIndex].Size,
             database.objectsData[selectedSoldierIndex].ID,
             index);
+        placedSoldier.Add(gridPosition);
     }
 
     public void UpdateState(Vector3Int gridPosition)

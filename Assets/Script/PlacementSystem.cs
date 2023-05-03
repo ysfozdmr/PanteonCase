@@ -72,19 +72,26 @@ public class PlacementSystem : GameActor<GameManager>
         _buildingState.OnAction(gridPos);
     }
 
-    public void PlaceSoldier(int selectedSoldierIndex)
+    public void PlaceSoldier(int id)
     {
+        _buildingState = new PlacementState(id, _grid, preview, _dataBaseSo, floarData, buildingsData, _objectPlacer);
         Vector3 soldierPos;
         Vector3Int gridPos;
 
-        soldierPos = _objectPlacer.placedGameObjects[0].transform.position + Vector3.right * 2;
+        soldierPos =inputManager.GetBarrackPosition() + Vector3.right * 2;
         gridPos = _grid.WorldToCell(soldierPos);
-        _buildingState.OnActionSoldier(gridPos, selectedSoldierIndex, field);
-        
+        Debug.Log(gridPos);
+        _buildingState.OnActionSoldier(gridPos, _dataBaseSo.objectsData.FindIndex(data => data.ID == id));
     }
 
     public override void ActorUpdate()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            inputManager.GetBarrackPosition();
+        }
+
+
         if (_buildingState == null)
             return;
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
