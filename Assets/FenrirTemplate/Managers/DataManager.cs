@@ -13,5 +13,6 @@ namespace Fenrir.Managers
         public FXData fXData;
         public LevelDataCapsule levelCapsule;
         public Camera SceneCamera;
+        public GameObject RightSidePanel;
     }
 }

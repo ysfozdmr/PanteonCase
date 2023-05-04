@@ -36,12 +36,17 @@ public class PlacementState : IBuildingState
         this.objectPlacer = objectPlacer;
 
         selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
-        if (selectedObjectIndex > -1)
+        if (selectedObjectIndex > -1&& selectedObjectIndex<2)
         {
             previewSystem.StartShowingPlacementPreview(
                 database.objectsData[selectedObjectIndex].Prefab,
                 database.objectsData[selectedObjectIndex].Size);
-            DataManager.Instance.SelectedObjectIndex = selectedObjectIndex;
+           
+        }
+        else if(selectedObjectIndex > -1)
+        {
+            //DataManager.Instance.SelectedObjectIndex = selectedObjectIndex;
+            
         }
         else
             throw new System.Exception($"No object with ID {iD}");
@@ -70,8 +75,6 @@ public class PlacementState : IBuildingState
 
     public void OnAction(Vector3Int gridPosition)
     {
-        previewSystem.enabled = true;
-
         bool placementValiditiy = CheckPlacementValiditiy(gridPosition, selectedObjectIndex);
         if (placementValiditiy == false)
         {
@@ -93,7 +96,6 @@ public class PlacementState : IBuildingState
 
     public void OnActionSoldier(Vector3Int gridPosition, int selectedSoldierIndex)
     {
-        previewSystem.enabled = false;
         Vector3 pos =InputManager.Instance.GetBarrackPosition();
         bool placementValiditiy =
             SoldierCheckPlacementValiditiy(gridPosition, selectedSoldierIndex, placedSoldier.Count);

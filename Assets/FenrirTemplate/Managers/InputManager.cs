@@ -15,8 +15,12 @@ namespace Fenrir.Managers
         private Camera sceneCamera;
         private Vector3 lastPos;
         private Vector3 barrackPos;
+        
         [SerializeField] private LayerMask placementLayerMask;
         [SerializeField] private LayerMask barrackLayerMask;
+        [SerializeField] private LayerMask buildingsLayerMask;
+        
+        string buildingsName;
 
 
         public event Action OnClicked, OnExit;
@@ -50,11 +54,26 @@ namespace Fenrir.Managers
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, barrackLayerMask);
             if (hit.collider != null)
             {
-                Debug.Log(barrackPos);
                 barrackPos = hit.collider.gameObject.transform.position;
             }
 
             return barrackPos;
+        }
+
+        public string GetBuildingsName()
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = sceneCamera.nearClipPlane;
+            Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, buildingsLayerMask);
+            if (hit.collider != null)
+            {
+                Debug.Log("getbuildingsname");
+                buildingsName = hit.collider.gameObject.name;
+                Debug.Log(buildingsName);
+            }
+
+            return buildingsName;
         }
         public Vector3 GetSelectedMapPosition()
         {

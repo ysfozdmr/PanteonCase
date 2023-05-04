@@ -11,6 +11,8 @@ public class RightSidePanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buildingText;
     
     private int selectedObjectIndex;
+    public GameObject InformationPanel;
+    public GameObject SoldiersObject;
     
     public void InformationPanelAction()
     {
@@ -18,7 +20,27 @@ public class RightSidePanel : MonoBehaviour
         buildingImage.sprite = DataManager.Instance._dataBaseSo.objectsData[selectedObjectIndex].Prefab
             .GetComponentInChildren<SpriteRenderer>().sprite;
         buildingText.text=DataManager.Instance._dataBaseSo.objectsData[selectedObjectIndex].Name;
+    }
 
-
+    public void PanelOpen()
+    {
+        InformationPanelAction();
+        if (InputManager.Instance.GetBuildingsName() != null)
+        {
+            InformationPanel.SetActive(true);
+            if (InputManager.Instance.GetBuildingsName().Contains("Barrack"))
+            {
+                SoldiersObject.SetActive(true);
+            }
+            else
+            {
+                SoldiersObject.SetActive(false);
+            }
+        }
+        else
+        {
+            InformationPanel.SetActive(false);
+            SoldiersObject.SetActive(false);
+        }
     }
 }

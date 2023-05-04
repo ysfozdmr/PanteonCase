@@ -53,6 +53,7 @@ public class PlacementSystem : GameActor<GameManager>
     public void StartPlacement(int id)
     {
         StopPlacement();
+        DataManager.Instance.SelectedObjectIndex = _dataBaseSo.objectsData.FindIndex(data => data.ID == id);
         gridVisualizastion.SetActive(true);
         _buildingState = new PlacementState(id, _grid, preview, _dataBaseSo, floarData, buildingsData, _objectPlacer);
         inputManager.OnClicked += PlaceStructure;
@@ -89,9 +90,10 @@ public class PlacementSystem : GameActor<GameManager>
         if (Input.GetMouseButtonDown(0))
         {
             inputManager.GetBarrackPosition();
+            inputManager.GetBuildingsName();
+            UIManager.Instance.RightSidePanel.GetComponent<RightSidePanel>().PanelOpen();
         }
-
-
+        
         if (_buildingState == null)
             return;
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
