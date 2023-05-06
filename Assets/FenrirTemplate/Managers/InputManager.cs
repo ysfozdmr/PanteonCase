@@ -5,6 +5,7 @@ using Fenrir.Actors;
 using Fenrir.EventBehaviour;
 using Fenrir.Managers;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,10 +20,11 @@ namespace Fenrir.Managers
         [SerializeField] private LayerMask placementLayerMask;
         [SerializeField] private LayerMask barrackLayerMask;
         [SerializeField] private LayerMask buildingsLayerMask;
+        [SerializeField] private LayerMask soldierLayerMask;
         
         string buildingsName;
 
-
+        private PlacementSystem _placementSystem;
         public event Action OnClicked, OnExit;
 
         private void Start()
@@ -41,6 +43,7 @@ namespace Fenrir.Managers
             {
                 OnExit?.Invoke();
             }
+
         }
 
         public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
@@ -68,9 +71,7 @@ namespace Fenrir.Managers
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, buildingsLayerMask);
             if (hit.collider != null)
             {
-                Debug.Log("getbuildingsname");
                 buildingsName = hit.collider.gameObject.name;
-                Debug.Log(buildingsName);
             }
 
             return buildingsName;
@@ -87,6 +88,23 @@ namespace Fenrir.Managers
             }
 
             return lastPos;
+        }
+
+        public GameObject GetSoldier()
+        {
+            GameObject soldier=new GameObject();
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = sceneCamera.nearClipPlane;
+            Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, soldierLayerMask);
+            if (hit.collider != null)
+            {
+               // _placementSystem.isSoldierMove=true;
+                soldier = hit.collider.gameObject;
+                Debug.Log(soldier.transform.position);
+            }
+
+            return soldier;
         }
     }
 }

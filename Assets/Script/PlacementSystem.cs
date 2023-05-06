@@ -24,10 +24,13 @@ public class PlacementSystem : GameActor<GameManager>
 
     private Vector3Int lastDetectedPos = Vector3Int.zero;
 
-    private IBuildingState _buildingState;
+    public IBuildingState _buildingState;
 
     public GameObject field;
 
+    [SerializeField] private PathFinding _pathFinding;
+
+    public bool isSoldierMove;
     public override void ActorStart()
     {
         StopPlacement();
@@ -42,6 +45,7 @@ public class PlacementSystem : GameActor<GameManager>
             return;
         }
 
+        isSoldierMove = false;
         gridVisualizastion.SetActive(false);
         _buildingState.EndState();
         inputManager.OnClicked -= PlaceStructure;
@@ -53,6 +57,7 @@ public class PlacementSystem : GameActor<GameManager>
     public void StartPlacement(int id)
     {
         StopPlacement();
+        isSoldierMove = true;
         DataManager.Instance.SelectedObjectIndex = _dataBaseSo.objectsData.FindIndex(data => data.ID == id);
         gridVisualizastion.SetActive(true);
         _buildingState = new PlacementState(id, _grid, preview, _dataBaseSo, floarData, buildingsData, _objectPlacer);
@@ -73,6 +78,10 @@ public class PlacementSystem : GameActor<GameManager>
         _buildingState.OnAction(gridPos);
     }
 
+    public bool CheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs)
+    {
+        return _buildingState.CheckPlacementValiditiy(gridPos, selectedObjectIndexs);
+    }
     public void PlaceSoldier(int id)
     {
         _buildingState = new PlacementState(id, _grid, preview, _dataBaseSo, floarData, buildingsData, _objectPlacer);
@@ -83,6 +92,7 @@ public class PlacementSystem : GameActor<GameManager>
         gridPos = _grid.WorldToCell(soldierPos);
         Debug.Log(gridPos);
         _buildingState.OnActionSoldier(gridPos, _dataBaseSo.objectsData.FindIndex(data => data.ID == id));
+        
     }
 
     public override void ActorUpdate()
@@ -98,10 +108,10 @@ public class PlacementSystem : GameActor<GameManager>
             return;
         Vector3 mousePos = inputManager.GetSelectedMapPosition();
         Vector3Int gridPos = _grid.WorldToCell(mousePos);
-
+        
         if (lastDetectedPos != gridPos)
         {
-            _buildingState.UpdateState(gridPos);
+            _buildingState.UpdateState(gridPos,isSoldierMove);
             lastDetectedPos = gridPos;
         }
     }

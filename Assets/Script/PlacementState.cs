@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fenrir.Managers;
@@ -36,17 +37,15 @@ public class PlacementState : IBuildingState
         this.objectPlacer = objectPlacer;
 
         selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
-        if (selectedObjectIndex > -1&& selectedObjectIndex<2)
+        if (selectedObjectIndex > -1 && selectedObjectIndex < 2)
         {
             previewSystem.StartShowingPlacementPreview(
                 database.objectsData[selectedObjectIndex].Prefab,
                 database.objectsData[selectedObjectIndex].Size);
-           
         }
-        else if(selectedObjectIndex > -1)
+        else if (selectedObjectIndex > -1)
         {
             //DataManager.Instance.SelectedObjectIndex = selectedObjectIndex;
-            
         }
         else
             throw new System.Exception($"No object with ID {iD}");
@@ -57,7 +56,7 @@ public class PlacementState : IBuildingState
         previewSystem.StopShowingPreview();
     }
 
-    private bool CheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs)
+    public bool CheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs)
     {
         GridData selectedData = database.objectsData[selectedObjectIndexs].isInteractable == true
             ? floorData
@@ -96,7 +95,7 @@ public class PlacementState : IBuildingState
 
     public void OnActionSoldier(Vector3Int gridPosition, int selectedSoldierIndex)
     {
-        Vector3 pos =InputManager.Instance.GetBarrackPosition();
+        Vector3 pos = InputManager.Instance.GetBarrackPosition();
         bool placementValiditiy =
             SoldierCheckPlacementValiditiy(gridPosition, selectedSoldierIndex, placedSoldier.Count);
         if (placementValiditiy == false)
@@ -118,6 +117,7 @@ public class PlacementState : IBuildingState
             {
                 case 0:
                     gridPosition = ArrangeCellPosition(pos, Vector3.left, gridPosition);
+
                     break;
                 case 1:
                     gridPosition = ArrangeCellPosition(pos, Vector3.up * 2, gridPosition);
@@ -152,7 +152,6 @@ public class PlacementState : IBuildingState
     private void PlaceSoldier(Vector3Int gridPosition, int selectedSoldierIndex)
     {
         checkCounter = 0;
-        Debug.Log("zort");
         int index = objectPlacer.PlaceObject(database.objectsData[selectedSoldierIndex].Prefab,
             grid.CellToWorld(gridPosition));
 
@@ -165,10 +164,13 @@ public class PlacementState : IBuildingState
         placedSoldier.Add(gridPosition);
     }
 
-    public void UpdateState(Vector3Int gridPosition)
+    public void UpdateState(Vector3Int gridPosition,bool isSoldierMove)
     {
-        bool placementValiditiy = CheckPlacementValiditiy(gridPosition, selectedObjectIndex);
+        if (isSoldierMove)
+        {
+            bool placementValiditiy = CheckPlacementValiditiy(gridPosition, selectedObjectIndex);
 
-        previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValiditiy);
+            previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValiditiy);
+        }
     }
 }

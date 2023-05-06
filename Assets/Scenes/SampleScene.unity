@@ -327,6 +327,7 @@ MonoBehaviour:
   fXData: {fileID: 11400000, guid: c4f954575cb7cda479c185809dda1cae, type: 2}
   levelCapsule: {fileID: 11400000, guid: 24c4868794ae0164aa5b07f3b9ffe88e, type: 2}
   SceneCamera: {fileID: 519420031}
+  PathFinding: {fileID: 8994473153838945193, guid: 0ebc71ad996b00a4a94d0f551a3902ce, type: 3}
 --- !u!4 &2070288491
 Transform:
   m_ObjectHideFlags: 0
