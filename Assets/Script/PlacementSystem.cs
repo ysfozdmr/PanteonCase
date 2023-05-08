@@ -44,8 +44,7 @@ public class PlacementSystem : GameActor<GameManager>
         {
             return;
         }
-
-        isSoldierMove = false;
+        
         gridVisualizastion.SetActive(false);
         _buildingState.EndState();
         inputManager.OnClicked -= PlaceStructure;
@@ -57,7 +56,6 @@ public class PlacementSystem : GameActor<GameManager>
     public void StartPlacement(int id)
     {
         StopPlacement();
-        isSoldierMove = true;
         DataManager.Instance.SelectedObjectIndex = _dataBaseSo.objectsData.FindIndex(data => data.ID == id);
         gridVisualizastion.SetActive(true);
         _buildingState = new PlacementState(id, _grid, preview, _dataBaseSo, floarData, buildingsData, _objectPlacer);
@@ -65,6 +63,13 @@ public class PlacementSystem : GameActor<GameManager>
         inputManager.OnExit += StopPlacement;
     }
 
+    public void StartRemoving(Vector3Int gridPos)
+    {
+        StopPlacement();
+        gridVisualizastion.SetActive(true);
+        _buildingState = new RemovingState(_grid,_dataBaseSo, floarData, buildingsData, _objectPlacer);
+        _buildingState.OnAction(gridPos);
+    }
     private void PlaceStructure()
     {
         if (inputManager.IsPointerOverUI())
@@ -78,6 +83,10 @@ public class PlacementSystem : GameActor<GameManager>
         _buildingState.OnAction(gridPos);
     }
 
+    public void GetDestroyMethod(Vector3Int gridPos)
+    { 
+        _buildingState.DestroyObject(gridPos);
+    }
     public bool CheckPlacementValiditiy(Vector3Int gridPos, int selectedObjectIndexs)
     {
         return _buildingState.CheckPlacementValiditiy(gridPos, selectedObjectIndexs);
@@ -94,13 +103,16 @@ public class PlacementSystem : GameActor<GameManager>
         _buildingState.OnActionSoldier(gridPos, _dataBaseSo.objectsData.FindIndex(data => data.ID == id));
         
     }
-
+    public void GetSoldierMovementPlacement(Vector3Int firstPos,Vector3Int lastPos)
+    {
+        _buildingState.SoldierMovementPlacement(firstPos,lastPos);
+    }
     public override void ActorUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
             inputManager.GetBarrackPosition();
-            inputManager.GetBuildingsName();
+            inputManager.GetObjectsName();
             UIManager.Instance.RightSidePanel.GetComponent<RightSidePanel>().PanelOpen();
         }
         
@@ -111,7 +123,7 @@ public class PlacementSystem : GameActor<GameManager>
         
         if (lastDetectedPos != gridPos)
         {
-            _buildingState.UpdateState(gridPos,isSoldierMove);
+            _buildingState.UpdateState(gridPos);
             lastDetectedPos = gridPos;
         }
     }

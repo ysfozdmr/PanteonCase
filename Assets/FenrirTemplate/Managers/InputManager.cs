@@ -19,8 +19,9 @@ namespace Fenrir.Managers
         
         [SerializeField] private LayerMask placementLayerMask;
         [SerializeField] private LayerMask barrackLayerMask;
-        [SerializeField] private LayerMask buildingsLayerMask;
+        [SerializeField] private LayerMask objectsLayerMask;
         [SerializeField] private LayerMask soldierLayerMask;
+        [SerializeField] private LayerMask targetLayerMask;
         
         string buildingsName;
 
@@ -63,18 +64,19 @@ namespace Fenrir.Managers
             return barrackPos;
         }
 
-        public string GetBuildingsName()
+        public GameObject GetObjectsName()
         {
+            GameObject selectedObject = null;
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = sceneCamera.nearClipPlane;
             Ray ray = sceneCamera.ScreenPointToRay(mousePos);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, buildingsLayerMask);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, objectsLayerMask);
             if (hit.collider != null)
             {
-                buildingsName = hit.collider.gameObject.name;
+                selectedObject = hit.collider.gameObject;
             }
 
-            return buildingsName;
+            return selectedObject;
         }
         public Vector3 GetSelectedMapPosition()
         {
@@ -92,19 +94,32 @@ namespace Fenrir.Managers
 
         public GameObject GetSoldier()
         {
-            GameObject soldier=new GameObject();
+            GameObject soldier = null;
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = sceneCamera.nearClipPlane;
             Ray ray = sceneCamera.ScreenPointToRay(mousePos);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, soldierLayerMask);
             if (hit.collider != null)
             {
-               // _placementSystem.isSoldierMove=true;
                 soldier = hit.collider.gameObject;
-                Debug.Log(soldier.transform.position);
             }
 
             return soldier;
+        }
+
+        public GameObject GetTarget()
+        {
+            GameObject targetObject = null;
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = sceneCamera.nearClipPlane;
+            Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, targetLayerMask);
+            if (hit.collider != null)
+            {
+                targetObject = hit.collider.gameObject;
+            }
+
+            return targetObject;
         }
     }
 }

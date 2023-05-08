@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 870752122880817774}
-  - component: {fileID: -714262046914239109}
   - component: {fileID: -6557985023584955627}
+  - component: {fileID: -5099315742313441666}
   m_Layer: 6
   m_Name: BarracksParent
   m_TagString: Barrack
@@ -34,18 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-714262046914239109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8177379989055486964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9e0328b2fad37544b6852c834c91503, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &-6557985023584955627
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -72,6 +60,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.9174414, y: 1.6083038}
   m_EdgeRadius: 0
+--- !u!114 &-5099315742313441666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177379989055486964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c885e1983402445ba3d29f0c0349d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 0
+  AttackPoint: 0
+  ID: 0
+  index: 0
 --- !u!1001 &3304518209402817382
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ namespace Fenrir.Managers
         public GameObject spawnObject;
 
         [SerializeField] private PlacementSystem _placementSystem;
+        
 
         private void Start()
         {
@@ -73,7 +74,6 @@ namespace Fenrir.Managers
             {
                 if (ScroolView.GetComponent<ScrollRect>().verticalScrollbar.value < 0.25)
                 {
-                    //_objectPooler.Spawn();
                     SpawnButtons();
                     ScroolView.GetComponent<ScrollRect>().verticalScrollbar.value = 1;
                 }

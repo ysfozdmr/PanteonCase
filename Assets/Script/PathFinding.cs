@@ -20,6 +20,7 @@ public class PathFinding : MonoBehaviour
 
     public List<Vector3Int> CheckPath(Vector3Int currentGridPos, Vector3Int destinationGridPos)
     {
+        
         tempGridPos.x = currentGridPos.x;
         tempGridPos.y = currentGridPos.y;
 

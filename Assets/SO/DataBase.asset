@@ -18,23 +18,54 @@ MonoBehaviour:
     <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 8177379989055486964, guid: ebeabedcd38ac194cbc53d7be1bbbd65, type: 3}
+    <Health>k__BackingField: 20
+    <AttackPoint>k__BackingField: 0
   - <Name>k__BackingField: PowerPlant
     <ID>k__BackingField: 1
     <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 4073297717705811936, guid: f27022fe112710a4d916a4af3b3c71c3, type: 3}
+    <Health>k__BackingField: 30
+    <AttackPoint>k__BackingField: 0
+  - <Name>k__BackingField: Church
+    <ID>k__BackingField: 2
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 8211292843207107948, guid: 8e11a0a95ddc9a848991689b1726d4f3, type: 3}
+    <Health>k__BackingField: 15
+    <AttackPoint>k__BackingField: 0
+  - <Name>k__BackingField: House
+    <ID>k__BackingField: 3
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 2, y: 2}
+    <Prefab>k__BackingField: {fileID: 3129639503347420146, guid: 8428a5e77a985df43a4266d24f595396, type: 3}
+    <Health>k__BackingField: 15
+    <AttackPoint>k__BackingField: 0
+  - <Name>k__BackingField: Workshop
+    <ID>k__BackingField: 4
+    <isInteractable>k__BackingField: 1
+    <Size>k__BackingField: {x: 1, y: 1}
+    <Prefab>k__BackingField: {fileID: 4985398178675799664, guid: d2bf09f94a3c5554eae378216def6075, type: 3}
+    <Health>k__BackingField: 15
+    <AttackPoint>k__BackingField: 0
   - <Name>k__BackingField: FirstSoldier
     <ID>k__BackingField: 10
     <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 1, y: 1}
     <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
-  - <Name>k__BackingField: FirstSoldier
+    <Health>k__BackingField: 5
+    <AttackPoint>k__BackingField: 1
+  - <Name>k__BackingField: SeconSoldier
     <ID>k__BackingField: 11
     <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 1, y: 1}
-    <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
-  - <Name>k__BackingField: FirstSoldier
+    <Prefab>k__BackingField: {fileID: 3223937501215157203, guid: 234043d65a4495444b514a03d7ea05d0, type: 3}
+    <Health>k__BackingField: 10
+    <AttackPoint>k__BackingField: 3
+  - <Name>k__BackingField: ThirdSoldier
     <ID>k__BackingField: 12
     <isInteractable>k__BackingField: 1
     <Size>k__BackingField: {x: 1, y: 1}
-    <Prefab>k__BackingField: {fileID: 5191396986408426261, guid: e3304ec097081b540af74b00c4d245ba, type: 3}
+    <Prefab>k__BackingField: {fileID: 798347538443830696, guid: 46481781d32447d47991a25e5499946f, type: 3}
+    <Health>k__BackingField: 15
+    <AttackPoint>k__BackingField: 5

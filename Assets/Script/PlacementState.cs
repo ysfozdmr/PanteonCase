@@ -37,7 +37,7 @@ public class PlacementState : IBuildingState
         this.objectPlacer = objectPlacer;
 
         selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
-        if (selectedObjectIndex > -1 && selectedObjectIndex < 2)
+        if (selectedObjectIndex > -1 && selectedObjectIndex < 5)
         {
             previewSystem.StartShowingPlacementPreview(
                 database.objectsData[selectedObjectIndex].Prefab,
@@ -51,6 +51,9 @@ public class PlacementState : IBuildingState
             throw new System.Exception($"No object with ID {iD}");
     }
 
+    public void DestroyObject(Vector3Int gridPos)
+    {
+    }
     public void EndState()
     {
         previewSystem.StopShowingPreview();
@@ -81,7 +84,7 @@ public class PlacementState : IBuildingState
         }
 
         int index = objectPlacer.PlaceObject(database.objectsData[selectedObjectIndex].Prefab,
-            grid.CellToWorld(gridPosition));
+            grid.CellToWorld(gridPosition),ID);
 
         GridData selectedData = database.objectsData[selectedObjectIndex].isInteractable == true
             ? floorData
@@ -153,7 +156,7 @@ public class PlacementState : IBuildingState
     {
         checkCounter = 0;
         int index = objectPlacer.PlaceObject(database.objectsData[selectedSoldierIndex].Prefab,
-            grid.CellToWorld(gridPosition));
+            grid.CellToWorld(gridPosition),ID);
 
         GridData selectedData = database.objectsData[selectedSoldierIndex].isInteractable == true
             ? floorData
@@ -164,9 +167,16 @@ public class PlacementState : IBuildingState
         placedSoldier.Add(gridPosition);
     }
 
-    public void UpdateState(Vector3Int gridPosition,bool isSoldierMove)
+    public void SoldierMovementPlacement(Vector3Int firstPos, Vector3Int lastPos)
     {
-        if (isSoldierMove)
+        GridData selectedData = database.objectsData[2].isInteractable == true
+            ? floorData
+            : buildingsData;
+        selectedData.AddObjectAt(lastPos,new Vector2Int(1,1),10,2);
+    }
+    public void UpdateState(Vector3Int gridPosition)
+    {
+        if (selectedObjectIndex<5)
         {
             bool placementValiditiy = CheckPlacementValiditiy(gridPosition, selectedObjectIndex);
 
