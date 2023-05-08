@@ -105,7 +105,11 @@ public class PlacementSystem : GameActor<GameManager>
     }
     public void GetSoldierMovementPlacement(Vector3Int firstPos,Vector3Int lastPos)
     {
-        _buildingState.SoldierMovementPlacement(firstPos,lastPos);
+        if (firstPos !=null && lastPos!=null)
+        {
+            _buildingState.SoldierMovementPlacement(firstPos,lastPos);     
+        }
+       
     }
     public override void ActorUpdate()
     {

@@ -12,7 +12,14 @@ public class SoldierBehaviour : MonoBehaviour
     public int AttackPoint;
     public int ID;
     public int index;
-    
+    public enum State
+    {
+        Idle,
+        Walk,
+        Attack
+    }
+
+    public State _state;
     private void Awake()
     {
         index= DataManager.Instance._dataBaseSo.objectsData.FindIndex(data => data.ID == ID);

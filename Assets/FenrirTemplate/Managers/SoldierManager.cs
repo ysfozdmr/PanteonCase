@@ -18,22 +18,17 @@ namespace Fenrir.Managers
         public Grid grid;
 
 
-        public enum State
-        {
-            Idle,
-            Walk,
-            Attack
-        }
-
-        private State _state;
-
+       
         void Start()
         {
         }
 
         public void Movement(List<Vector3Int> _pathFinding, GameObject _soldier)
         {
-            StartCoroutine(Walk(_pathFinding, _soldier));
+            if (_pathFinding.Count>0 && _soldier != null)
+            {
+                StartCoroutine(Walk(_pathFinding, _soldier));      
+            }
         }
 
         IEnumerator Walk(List<Vector3Int> _pathFinding, GameObject _soldier)
@@ -45,26 +40,27 @@ namespace Fenrir.Managers
             Debug.Log(_pathFinding.Count);
             for (int i = 0; i < tempCount; i++)
             {
-                float x = 1;
-
-                while (x >= 0)
-                {
-                    _soldier.transform.position =
-                        Vector3.Lerp(_soldier.transform.position, _pathFinding[0], 5f * Time.deltaTime);
-                    x -= Time.deltaTime;
-                    yield return new WaitForEndOfFrame();
-                }
-
+                //float x = 1;
+                _soldier.transform.position = _pathFinding[0];
+                // while (x >= 0)
+                // {
+                //     _soldier.transform.position =
+                //         Vector3.Lerp(_soldier.transform.position, _pathFinding[0], 5f * Time.deltaTime);
+                //     x -= Time.deltaTime;
+                //     yield return new WaitForEndOfFrame();
+                // }
+                yield return new WaitForSeconds(.25f);
                 _pathFinding.RemoveAt(0);
             }
 
-            if (_state == State.Attack)
+            if ((soldier.GetComponent<SoldierBehaviour>()._state == SoldierBehaviour.State.Attack))
             {
                 StartCoroutine(AttackingNum(soldier, null));
             }
-            else if (_state == State.Walk)
+            else if (soldier.GetComponent<SoldierBehaviour>()._state == SoldierBehaviour.State.Walk)
             {
-                _state = State.Idle;
+                pathFinding.isPathDone = false;
+                soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Idle;
             }
         }
 
@@ -121,22 +117,23 @@ namespace Fenrir.Managers
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) &&  soldier.GetComponent<SoldierBehaviour>()._state == SoldierBehaviour.State.Idle)
             {
                 List<Vector3Int> _tempPathFinding = new List<Vector3Int>();
                 destinationPosition = InputManager.Instance.GetSelectedMapPosition();
-                pathFinding.CheckPath(grid.WorldToCell(soldier.transform.position),
+                Debug.Log("update içi");
+                pathFinding.CheckPath(soldier,grid.WorldToCell(soldier.transform.position),
                     grid.WorldToCell(destinationPosition));
                 _tempPathFinding.AddRange(pathFinding.destinationPositionsList);
                 pathFinding.destinationPositionsList.Clear();
                 soldier.GetComponent<SoldierBehaviour>()._pathFinding.AddRange(_tempPathFinding);
                 if (InputManager.Instance.GetTarget() != null)
                 {
-                    _state = State.Attack;
+                    soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Attack;
                 }
                 else
                 {
-                    _state = State.Walk;
+                    soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Walk;
                 }
 
                 Movement(soldier.GetComponent<SoldierBehaviour>()._pathFinding, soldier);

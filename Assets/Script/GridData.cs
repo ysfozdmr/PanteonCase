@@ -46,7 +46,6 @@ public class GridData
     public bool CanPlaceObject(Vector3Int gridPosition, Vector2Int objectSize)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
-        //Debug.Log(objectSize + " object size " + positionToOccupy[0] +" !!!");
         foreach (var pos in positionToOccupy)
         {
             if (placedObjects.ContainsKey(pos))

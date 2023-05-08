@@ -8,119 +8,225 @@ public class PathFinding : MonoBehaviour
     public List<Vector3Int> destinationPositionsList = new List<Vector3Int>();
 
     private Vector3Int tempGridPos;
-    private Vector3Int tempVector3IntPos;
+    private Vector3Int crossCheckPos;
 
     public bool xValueIncrease;
     public bool yValueIncrease;
 
     private bool isFindPath;
+    public bool isPathDone;
 
-    private int sw;
     [SerializeField] private PlacementSystem _buildingState;
 
-    public List<Vector3Int> CheckPath(Vector3Int currentGridPos, Vector3Int destinationGridPos)
+
+    public List<Vector3Int> CheckPath(GameObject _soldier, Vector3Int currentGridPos, Vector3Int destinationGridPos)
     {
-        
-        tempGridPos.x = currentGridPos.x;
-        tempGridPos.y = currentGridPos.y;
-
-        tempGridPos.x = CompareValues(currentGridPos.x, destinationGridPos.x, true);
-        tempGridPos.y = CompareValues(currentGridPos.y, destinationGridPos.y, false);
-
-        if (_buildingState.CheckPlacementValiditiy(tempGridPos, 2))
-        {
-            destinationPositionsList.Add(tempGridPos);
-        }
-        else
-        {
-            CheckAllSides(xValueIncrease, yValueIncrease, currentGridPos);
-        }
-
-        if (tempGridPos == destinationGridPos)
-        {
-            return destinationPositionsList;
-        }
-        else
-        {
-            CheckPath(tempGridPos, destinationGridPos);
-        }
-
-        return null;
-    }
-
-    private void CheckAllSides(bool xPosValueIncrease, bool yPosValueIncrease, Vector3Int currentPos)
-    {
-        if (xPosValueIncrease && yPosValueIncrease)
-        {
-            List<int> priorityList = new List<int> { 0,1,2,3 };
-            SetPriority(priorityList,currentPos);
-            
-        }
-        else if (xPosValueIncrease && !yPosValueIncrease)
-        {
-            List<int> priorityList = new List<int> { 0,2,1,3 };
-            SetPriority(priorityList,currentPos);
-        }
-        else if (!xPosValueIncrease && yPosValueIncrease)
-        {
-            List<int> priorityList = new List<int> { 2,1,3,0 };
-            SetPriority(priorityList,currentPos);
-        }
-        else
-        {
-            List<int> priorityList = new List<int> { 2,3,1,0 };
-            SetPriority(priorityList,currentPos);
-        }
-    }
-
-    void SetPriority(List<int> list, Vector3Int currentPos)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            if (isFindPath)
+        // if (_soldier.GetComponent<SoldierBehaviour>()._state == SoldierBehaviour.State.Idle)
+        // {
+            if (isPathDone)
             {
                 isFindPath = false;
-                break;
+                //isPathDone = false;
+                return destinationPositionsList;
             }
-            switch (list[i])
+            else
             {
-                case 0:
-                    if (_buildingState.CheckPlacementValiditiy(CheckRightGrid(currentPos), 2))
+                if (!_buildingState.CheckPlacementValiditiy(destinationGridPos, 5))
+                {
+                    if (_buildingState.CheckPlacementValiditiy(CheckRightGrid(destinationGridPos), 5))
                     {
-                        destinationPositionsList.Add(CheckRightGrid(currentPos));
-                        isFindPath = true;
+                        destinationGridPos = CheckRightGrid(destinationGridPos);
                     }
-
-                    break;
-                case 1:
-                    if (_buildingState.CheckPlacementValiditiy(CheckUpGrid(currentPos), 2))
+                    else if (_buildingState.CheckPlacementValiditiy(CheckUpGrid(destinationGridPos), 5))
                     {
-                        destinationPositionsList.Add(CheckUpGrid(currentPos));
-                        isFindPath = true;
-
+                        destinationGridPos = CheckUpGrid(destinationGridPos);
                     }
-
-                    break;
-                case 2:
-                    if (_buildingState.CheckPlacementValiditiy(CheckLeftGrid(currentPos), 2))
+                    else if (_buildingState.CheckPlacementValiditiy(CheckLeftGrid(destinationGridPos), 5))
                     {
-                        destinationPositionsList.Add(CheckLeftGrid(currentPos));
-                        isFindPath = true;
-
+                        destinationGridPos = CheckLeftGrid(destinationGridPos);
                     }
-
-                    break;
-                case 3:
-                    if (_buildingState.CheckPlacementValiditiy(CheckDownGrid(currentPos), 2))
+                    else if (_buildingState.CheckPlacementValiditiy(CheckDownGrid(destinationGridPos), 5))
                     {
-                        destinationPositionsList.Add(CheckDownGrid(currentPos));
-                        isFindPath = true;
-
+                        destinationGridPos = CheckDownGrid(destinationGridPos);
                     }
+                    else
+                    {
+                        Debug.Log("Kırdım gitmiyorum");
+                        return null;
+                    }
+                }
 
-                    break;
+
+                tempGridPos.x = currentGridPos.x;
+                tempGridPos.y = currentGridPos.y;
+
+                crossCheckPos.x = CompareValues(currentGridPos.x, destinationGridPos.x, true);
+                crossCheckPos.y = CompareValues(currentGridPos.y, destinationGridPos.y, false);
+
+                if (_buildingState.CheckPlacementValiditiy(crossCheckPos, 5) && !isPathDone)
+                {
+                    tempGridPos.x = CompareValues(currentGridPos.x, destinationGridPos.x, true);
+                    tempGridPos.y = CompareValues(currentGridPos.y, destinationGridPos.y, false);
+
+                    Debug.Log("çapraz atladım ***");
+                    destinationPositionsList.Add(tempGridPos);
+                    isFindPath = true;
+                    
+                    if (tempGridPos == destinationGridPos)
+                    {
+                        isPathDone = true;
+                    }
+                    
+                    if (isFindPath)
+                    {
+                        isFindPath = false;
+                        CheckPath(_soldier,tempGridPos, destinationGridPos);
+                        return null;
+                    }
+                }
+                else
+                {
+                    if (tempGridPos == destinationGridPos)
+                    {
+                        isPathDone = true;
+                    }
+                    else
+                    {
+                        CheckAllSides(xValueIncrease, yValueIncrease, currentGridPos, destinationGridPos,_soldier);     
+                    }
+                    Debug.Log("ELSE **********");
+                   
+                }
+
+                return null;
+            }
+        // }
+        // else
+        // {
+        //     return null;
+        // }
+    }
+
+
+    private void CheckAllSides(bool xPosValueIncrease, bool yPosValueIncrease, Vector3Int currentPos,
+        Vector3Int destinationGridPos, GameObject _soldier)
+    {
+        if (!isPathDone)
+        {
+            if (xPosValueIncrease && yPosValueIncrease)
+            {
+                List<int> priorityList = new List<int> { 0, 1, 2, 3 };
+                StartCoroutine(SetPriority(priorityList, currentPos, destinationGridPos,_soldier));
+            }
+            else if (xPosValueIncrease && !yPosValueIncrease)
+            {
+                List<int> priorityList = new List<int> { 0, 3, 1, 2 };
+                StartCoroutine(SetPriority(priorityList, currentPos, destinationGridPos,_soldier));
+            }
+            else if (!xPosValueIncrease && yPosValueIncrease)
+            {
+                List<int> priorityList = new List<int> { 2, 1, 0, 3 };
+                StartCoroutine(SetPriority(priorityList, currentPos, destinationGridPos,_soldier));
+            }
+            else
+            {
+                List<int> priorityList = new List<int> { 2, 3, 0, 1 };
+                StartCoroutine(SetPriority(priorityList, currentPos, destinationGridPos,_soldier));
             }
         }
+    }
+
+    IEnumerator SetPriority(List<int> list, Vector3Int currentPos, Vector3Int destinationGridPos,GameObject _soldier)
+    {
+        if (!isPathDone)
+        {
+            Debug.Log("SET prİ");
+            for (int i = 0; i < 4; i++)
+            {
+                if (isFindPath)
+                {
+                    break;
+                }
+
+                switch (list[i])
+                {
+                    case 0:
+                        if (_buildingState.CheckPlacementValiditiy(CheckRightGrid(currentPos), 5))
+                        {
+                            tempGridPos = CheckRightGrid(currentPos);
+                            destinationPositionsList.Add(CheckRightGrid(tempGridPos));
+                            isFindPath = true;
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            if (tempGridPos == destinationGridPos)
+                            {
+                                isPathDone = true;
+                            }
+                        }
+
+                        break;
+                    case 1:
+                        if (_buildingState.CheckPlacementValiditiy(CheckUpGrid(currentPos), 5))
+                        {
+                            tempGridPos = CheckUpGrid(currentPos);
+                            destinationPositionsList.Add(tempGridPos);
+                            isFindPath = true;
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            if (tempGridPos == destinationGridPos)
+                            {
+                                isPathDone = true;
+                            }
+                        }
+
+                        break;
+                    case 2:
+                        if (_buildingState.CheckPlacementValiditiy(CheckLeftGrid(currentPos), 5))
+                        {
+                            tempGridPos = CheckLeftGrid(currentPos);
+                            destinationPositionsList.Add(CheckLeftGrid(tempGridPos));
+                            isFindPath = true;
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            if (tempGridPos == destinationGridPos)
+                            {
+                                isPathDone = true;
+                            }
+                        }
+
+                        break;
+                    case 3:
+                        if (_buildingState.CheckPlacementValiditiy(CheckDownGrid(currentPos), 5))
+                        {
+                            tempGridPos = CheckDownGrid(currentPos);
+                            destinationPositionsList.Add(CheckDownGrid(tempGridPos));
+                            isFindPath = true;
+
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+
+                            if (tempGridPos == destinationGridPos)
+                            {
+                                isPathDone = true;
+                            }
+                        }
+
+                        break;
+                }
+            }
+
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            CheckPath(_soldier, tempGridPos, destinationGridPos);
+        }
+
+     
     }
 
     int CompareValues(int currentValue, int destinationValue, bool isXValue)
@@ -137,6 +243,7 @@ public class PathFinding : MonoBehaviour
                 yValueIncrease = true;
             }
         }
+
         else if (destinationValue < currentValue)
         {
             currentValue -= 1;
