@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fenrir.EventBehaviour;
-using UnityEditor.UIElements;
 using UnityEngine.UI;
 
 namespace Fenrir.Managers
@@ -21,7 +20,9 @@ namespace Fenrir.Managers
         public GameObject spawnObject;
 
         [SerializeField] private PlacementSystem _placementSystem;
-        
+
+        public GameObject InformationTextObject;
+
 
         private void Start()
         {
@@ -68,6 +69,11 @@ namespace Fenrir.Managers
             }
         }
 
+        public void InformationTextObjectAction(bool isOpen)
+        {
+            InformationTextObject.SetActive(isOpen);
+        }
+        
         IEnumerator InfiniteScrollNum()
         {
             while (true)

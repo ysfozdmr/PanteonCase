@@ -5,7 +5,6 @@ using Fenrir.Actors;
 using Fenrir.EventBehaviour;
 using Fenrir.Managers;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -25,7 +24,7 @@ namespace Fenrir.Managers
         
         string buildingsName;
 
-        private PlacementSystem _placementSystem;
+        public PlacementSystem _placementSystem;
         public event Action OnClicked, OnExit;
 
         private void Start()
@@ -94,17 +93,24 @@ namespace Fenrir.Managers
 
         public GameObject GetSoldier()
         {
-            GameObject soldier = null;
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = sceneCamera.nearClipPlane;
-            Ray ray = sceneCamera.ScreenPointToRay(mousePos);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, soldierLayerMask);
-            if (hit.collider != null)
+            if (!_placementSystem.isPlacement)
             {
-                soldier = hit.collider.gameObject;
+
+
+                GameObject soldier = null;
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = sceneCamera.nearClipPlane;
+                Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, soldierLayerMask);
+                if (hit.collider != null)
+                {
+                    soldier = hit.collider.gameObject;
+                }
+
+                return soldier;
             }
 
-            return soldier;
+            return null;
         }
 
         public GameObject GetTarget()

@@ -37,19 +37,21 @@ namespace Fenrir.Managers
             placementSystem.StartRemoving(grid.WorldToCell(_soldier.transform.position));
             placementSystem.GetSoldierMovementPlacement(grid.WorldToCell(_soldier.transform.position),
                 _pathFinding[tempCount - 1]);
-            Debug.Log(_pathFinding.Count);
+           
             for (int i = 0; i < tempCount; i++)
             {
-                //float x = 1;
+                float x = 0;
+                while (x <= .4)
+                {
+                    _soldier.transform.position =
+                        Vector3.Lerp(_soldier.transform.position, _pathFinding[0], 7*Time.deltaTime);
+                    x += Time.deltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+              
                 _soldier.transform.position = _pathFinding[0];
-                // while (x >= 0)
-                // {
-                //     _soldier.transform.position =
-                //         Vector3.Lerp(_soldier.transform.position, _pathFinding[0], 5f * Time.deltaTime);
-                //     x -= Time.deltaTime;
-                //     yield return new WaitForEndOfFrame();
-                // }
-                yield return new WaitForSeconds(.25f);
+                yield return new WaitForEndOfFrame();
+
                 _pathFinding.RemoveAt(0);
             }
 
@@ -109,7 +111,9 @@ namespace Fenrir.Managers
                 }
                 else
                 {
+                    soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Idle;
                     placementSystem.GetDestroyMethod(grid.WorldToCell(tempObject.transform.position));
+                    pathFinding.isPathDone = false;
                     yield break;
                 }
             }
@@ -117,26 +121,14 @@ namespace Fenrir.Managers
 
         void Update()
         {
+            
             if (Input.GetMouseButtonDown(1) &&  soldier.GetComponent<SoldierBehaviour>()._state == SoldierBehaviour.State.Idle)
             {
-                List<Vector3Int> _tempPathFinding = new List<Vector3Int>();
+                placementSystem.RemovingStateStart();
                 destinationPosition = InputManager.Instance.GetSelectedMapPosition();
-                Debug.Log("update içi");
+
                 pathFinding.CheckPath(soldier,grid.WorldToCell(soldier.transform.position),
                     grid.WorldToCell(destinationPosition));
-                _tempPathFinding.AddRange(pathFinding.destinationPositionsList);
-                pathFinding.destinationPositionsList.Clear();
-                soldier.GetComponent<SoldierBehaviour>()._pathFinding.AddRange(_tempPathFinding);
-                if (InputManager.Instance.GetTarget() != null)
-                {
-                    soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Attack;
-                }
-                else
-                {
-                    soldier.GetComponent<SoldierBehaviour>()._state = SoldierBehaviour.State.Walk;
-                }
-
-                Movement(soldier.GetComponent<SoldierBehaviour>()._pathFinding, soldier);
             }
 
             if (Input.GetMouseButtonDown(0))
